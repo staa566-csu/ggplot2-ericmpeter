@@ -11,20 +11,40 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### GGPLOT2 Assignment
 
+This data set contains ratings of every episode from the IMDB top 250 series. Personally, I have heard the "Parks and Rec vs The Office" debate for years now. I would like to see how their IMDB ratings stack up against each other over the course of their series'. 
+
 ```{r cars}
 ratings <- read.csv("C:/Users/ericp/Downloads/archive/imdb_top_250_series_episode_ratings.csv")
-#favShows <- c("House of Cards", "Game of Thrones", "Black Mirror", "Ted Lasso", "Mindhunter")
-favShows <- c("Parks and Recreation", "The Office","It")
+favShows <- c("Parks and Recreation", "The Office")
 library(dplyr)
-ratings <- ratings %>% 
+recVsOffice <- ratings %>% 
   filter(Title %in% favShows)
+head(recVsOffice)
+```
+First, the data needed to be filtered to include only these two shows.
 
+```{r}
 library(ggplot2)
 library(dplyr)
 library(directlabels)
-#ratings <- filter(ratings, Title == favShows)
-plt <- ggplot(data = ratings) + 
+plt <- ggplot(data = recVsOffice) + 
   geom_line(aes(x=X, y=Rating, color = Title))  + geom_dl(aes(x=X, y=Rating, color = Title,label=Title), method = 'top.points') + xlab("Episode Number")
+plt
+```
+
+But what about by season?
+```{r}
+(recVsOfficeSeasons <- recVsOffice %>% group_by(Season,Title) %>% summarise(Rating = mean(Rating), .groups = "keep"))
+plt <- ggplot(data = recVsOfficeSeasons) + 
+  geom_line(aes(x=Season, y=Rating, color = Title))  + geom_dl(aes(x=Season, y=Rating, color = Title,label=Title), method = 'top.points') + xlab("Season")
+plt
+```
+
+
+Finally, let's look at each series' distribution of ratings.
+```{r}
+plt <- ggplot(data = recVsOffice) + 
+  geom_bar(stat = "count", aes(x=Rating, fill = Title), position = "dodge") + xlab("Rating")
 plt
 ```
 
