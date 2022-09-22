@@ -1,0 +1,30 @@
+---
+title: "ggplot566"
+author: "Eric Peter"
+date: "9/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### GGPLOT2 Assignment
+
+```{r cars}
+ratings <- read.csv("C:/Users/ericp/Downloads/archive/imdb_top_250_series_episode_ratings.csv")
+#favShows <- c("House of Cards", "Game of Thrones", "Black Mirror", "Ted Lasso", "Mindhunter")
+favShows <- c("Parks and Recreation", "The Office","It")
+library(dplyr)
+ratings <- ratings %>% 
+  filter(Title %in% favShows)
+
+library(ggplot2)
+library(dplyr)
+library(directlabels)
+#ratings <- filter(ratings, Title == favShows)
+plt <- ggplot(data = ratings) + 
+  geom_line(aes(x=X, y=Rating, color = Title))  + geom_dl(aes(x=X, y=Rating, color = Title,label=Title), method = 'top.points') + xlab("Episode Number")
+plt
+```
+
